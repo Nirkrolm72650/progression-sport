@@ -53,10 +53,11 @@ for exercise in selected_exercises:
 # Bouton pour ajouter les données de la séance
 if st.button('Ajouter les données'):
     if session_number not in df['Séance'].values:
-        new_data = {'Séance': session_number}
+        new_data = {'Séance': [session_number]}
         for exercise in exercises:
-            new_data[exercise] = weights[exercise] if exercise in selected_exercises else None
-        df = df.append(new_data, ignore_index=True)
+            new_data[exercise] = [weights[exercise] if exercise in selected_exercises else None]
+        new_df = pd.DataFrame(new_data)
+        df = pd.concat([df, new_df], ignore_index=True)
         df.to_csv(DATA_FILE, index=False)
         st.success(f'Données de la séance {session_number} ajoutées !')
     else:
@@ -76,3 +77,6 @@ plt.legend()
 plt.grid(True)
 
 st.pyplot(plt)
+
+if __name__ == '__main__':
+    os.system('python -m streamlit run ' + __file__)
